@@ -136,6 +136,7 @@ Parameter | Description | Default
 `alertmanager.configMapOverrideName` | Prometheus alertmanager ConfigMap override where full-name is `{{.Release.Name}}-{{.Values.alertmanager.configMapOverrideName}}` and setting this value will prevent the default alertmanager ConfigMap from being generated | `""`
 `alertmanager.configFromSecret` | The name of a secret in the same kubernetes namespace which contains the Alertmanager config, setting this value will prevent the default alertmanager ConfigMap from being generated | `""`
 `alertmanager.configFileName` | The configuration file name to be loaded to alertmanager. Must match the key within configuration loaded from ConfigMap/Secret. | `alertmanager.yml`
+`alertmanager.configPath` |  Path to a alertmanager server config file on the container FS. If path is defined, configFileName will be ignored  | `/etc/config/alertmanager.yml`
 `alertmanager.ingress.enabled` | If true, alertmanager Ingress will be created | `false`
 `alertmanager.ingress.annotations` | alertmanager Ingress annotations | `{}`
 `alertmanager.ingress.extraLabels` | alertmanager Ingress additional labels | `{}`
@@ -179,6 +180,10 @@ Parameter | Description | Default
 `alertmanager.service.sessionAffinity` | Session Affinity for alertmanager service, can be `None` or `ClientIP` | `None`
 `alertmanager.service.type` | type of alertmanager service to create | `ClusterIP`
 `alertmanager.strategy` | Deployment strategy | `{ "type": "RollingUpdate" }`
+`alertmanager.sidecarContainers` | array of snippets with your sidecar containers for alertmanager server | `""`
+`alertmanager.extraVolumes` | Additional alertmanager server Volumes | `[]`
+`alertmanager.extraVolumeMounts` | Additional alertmanager server Volume mounts | `[]`
+
 `alertmanagerFiles.alertmanager.yml` | Prometheus alertmanager configuration | example configuration
 `configmapReload.prometheus.enabled` | If false, the configmap-reload container for Prometheus will not be deployed | `true`
 `configmapReload.prometheus.name` | configmap-reload container name | `configmap-reload`

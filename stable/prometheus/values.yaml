@@ -229,6 +229,18 @@ alertmanager:
   ##
   podLabels: {}
 
+  ## Additional Prometheus AlertManager Volume mounts
+  ##
+  extraVolumeMounts: []
+
+  ## Additional Prometheus AlertManager Volumes
+  ##
+  extraVolumes: []
+
+  ## Additional Prometheus AlertManager Sidecar Containers
+  ##
+  sidecarContainers:
+
   ## Specify if a Pod Security Policy for node-exporter must be created
   ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/
   ##

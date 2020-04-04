@@ -54,7 +54,11 @@ spec:
                   apiVersion: v1
                   fieldPath: status.podIP
           args:
-            - --config.file=/etc/config/{{ .Values.alertmanager.configFileName }}
+            {{- if .Values.alertmanager.configPath }}
+            - --config.file={{ .Values.alertmanager.configPath -}}
+            {{ else }}
+            - --config.file=/etc/config/{{ .Values.alertmanager.configFileName -}}
+            {{ end }}
             - --storage.path={{ .Values.alertmanager.persistentVolume.mountPath }}
             - --cluster.advertise-address=$(POD_IP):6783
           {{- range $key, $value := .Values.alertmanager.extraArgs }}
@@ -86,7 +90,9 @@ spec:
               subPath: {{ .subPath }}
               readOnly: {{ .readOnly }}
           {{- end }}
-
+          {{- if .Values.alertmanager.extraVolumeMounts }}
+          {{ toYaml .Values.alertmanager.extraVolumeMounts | nindent 12 }}
+          {{- end }}
         {{- if .Values.configmapReload.alertmanager.enabled }}
         - name: {{ template "prometheus.name" . }}-{{ .Values.alertmanager.name }}-{{ .Values.configmapReload.alertmanager.name }}
           image: "{{ .Values.configmapReload.alertmanager.image.repository }}:{{ .Values.configmapReload.alertmanager.image.tag }}"
@@ -100,6 +106,9 @@ spec:
             - name: config-volume
               mountPath: /etc/config
               readOnly: true
+        {{- end }}
+        {{- if .Values.alertmanager.sidecarContainers }}
+        {{- toYaml .Values.alertmanager.sidecarContainers | nindent 8 }}
         {{- end }}
     {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -142,4 +151,7 @@ spec:
         {{- else }}
           emptyDir: {}
         {{- end -}}
+{{- if .Values.alertmanager.extraVolumes }}
+{{ toYaml .Values.alertmanager.extraVolumes | indent 8}}
+{{- end }}
 {{- end }}
